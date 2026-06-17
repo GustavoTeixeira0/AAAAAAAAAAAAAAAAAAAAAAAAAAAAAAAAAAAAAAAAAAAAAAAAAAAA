@@ -32,15 +32,12 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link active" href="notas_professor.html">Notas professor</a>
-          </li>
-
-          <li class="nav-item">
             <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
           </li>
 
           </li>
         </ul>
+        <span id="navUserInfo" class="navbar-text text-info hidden"></span>
 
       </div>
     </div>
@@ -49,7 +46,7 @@
   <div class="container">
 
     <!-- CARD MATÉRIAS -->
-    <div class="card">
+    <!--<div class="card">
 
       <div class="title">
         <h2>Matérias Escolares:</h2>
@@ -68,7 +65,7 @@
 
       </div>
 
-    </div>
+    </div>-->
 
     <!-- CARD NOTAS -->
     <div class="card">
@@ -78,57 +75,26 @@
         <i class="bi bi-journal-check icon-title"></i>
       </div>
 
-      <div class="grades-grid">
-
-        <!-- Cabeçalho -->
-        <div class="grade-header">Bimestre 1</div>
-        <div class="grade-header">Bimestre 2</div>
-        <div class="grade-header">Bimestre 3</div>
-        <div class="grade-header">Bimestre 4</div>
-
-        <!-- Português -->
-        <div class="grade-box">8,5</div>
-        <div class="grade-box">7,0</div>
-        <div class="grade-box">9,2</div>
-        <div class="grade-box">8,8</div>
-
-        <!-- História -->
-        <div class="grade-box">6,5</div>
-        <div class="grade-box">7,8</div>
-        <div class="grade-box">8,0</div>
-        <div class="grade-box">7,2</div>
-
-        <!-- Geografia -->
-        <div class="grade-box">9,0</div>
-        <div class="grade-box">8,7</div>
-        <div class="grade-box">9,5</div>
-        <div class="grade-box">9,2</div>
-
-        <!-- Ciência -->
-        <div class="grade-box">7,2</div>
-        <div class="grade-box">6,8</div>
-        <div class="grade-box">7,5</div>
-        <div class="grade-box">8,0</div>
-
-        <!-- Matemática -->
-        <div class="grade-box">5,5</div>
-        <div class="grade-box">6,0</div>
-        <div class="grade-box">7,1</div>
-        <div class="grade-box">6,8</div>
-
-        <!-- Educação Física -->
-        <div class="grade-box">8,0</div>
-        <div class="grade-box">9,0</div>
-        <div class="grade-box">9,5</div>
-        <div class="grade-box">10,0</div>
-
-        <!-- Arte -->
-        <div class="grade-box">9,5</div>
-        <div class="grade-box">8,8</div>
-        <div class="grade-box">9,0</div>
-        <div class="grade-box">9,7</div>
-
+      <div id="notasAlunoConfig" class="actions hidden" style="gap:10px; flex-wrap: wrap;">
+        <input id="selectedAlunoCpf" class="cpf-mask" type="text" placeholder="CPF do aluno" maxlength="14" style="width:250px;">
+        <button type="button" onclick="renderNotasAluno()">Carregar notas</button>
+        <button type="button" onclick="salvarNotasAluno()">Salvar notas</button>
+        <button type="button" onclick="abrirListaAlunos()">Listar alunos</button>
       </div>
+
+      <div id="listaAlunosModal" class="modal hidden">
+        <div class="modal-content">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="color: #00e5ff; margin: 0;">Alunos da escola</h3>
+            <button type="button" onclick="fecharListaAlunos()" style="background: none; border: none; color: #00e5ff; font-size: 24px; cursor: pointer;">&times;</button>
+          </div>
+          <div id="listaAlunosContainer" style="max-height: 400px; overflow-y: auto; margin-top: 20px;"></div>
+        </div>
+      </div>
+
+      <div id="msgNotas" class="msg"></div>
+
+      <div id="gradesContainer" class="grades-grid"></div>
 
     </div>
 
@@ -137,6 +103,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

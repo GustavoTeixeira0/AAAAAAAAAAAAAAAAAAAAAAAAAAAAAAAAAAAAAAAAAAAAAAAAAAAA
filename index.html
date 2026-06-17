@@ -32,15 +32,12 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link active" href="notas_professor.html">Notas professor</a>
-          </li>
-
-          <li class="nav-item">
             <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
           </li>
 
           </li>
         </ul>
+        <span id="navUserInfo" class="navbar-text text-info hidden"></span>
 
       </div>
     </div>
@@ -52,27 +49,32 @@
         <h1>Login</h1>
       </div>
 
-      <div class="input-group">
-        <input type="text" class="cpf-mask" placeholder="CPF" maxlength="14">
-        <span class="icon"><i class="bi bi-person"></i></span>
+      <div id="loginCardFields">
+        <div class="input-group">
+          <input type="text" id="loginCpf" class="cpf-mask" placeholder="CPF" maxlength="14">
+          <span class="icon"><i class="bi bi-person"></i></span>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="loginSenha" placeholder="Senha">
+          <span class="icon"><i class="bi bi-key"></i></span>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="loginEscola" placeholder="Escola">
+          <span class="icon"><i class="bi bi-building"></i></span>
+        </div>
+
+        <div class="actions">
+          <button onclick="fazerLogin()">FAZER LOGIN</button>
+        </div>
       </div>
 
-      <div class="input-group">
-        <input type="password" id="loginSenha" placeholder="Senha">
-        <span class="icon"><i class="bi bi-key"></i></span>
-      </div>
-
-      <div class="input-group">
-        <input type="text" id="loginEscola" placeholder="Escola">
-        <span class="icon"><i class="bi bi-building"></i></span>
-      </div>
-      
-      <!--<div class="link">
-        <a href="#">esqueci minha senha</a>
-      </div>-->
-      
-      <div class="actions">
-        <button onclick="fazerLogin()">FAZER LOGIN</button>
+      <div id="sessionArea" class="hidden">
+        <p id="sessionUsuario" class="msg"></p>
+        <div class="actions">
+          <button onclick="sair()">SAIR</button>
+        </div>
       </div>
 
       <div class="msg" id="msgLogin"></div>
@@ -84,7 +86,7 @@
       </div>
 
       <div class="input-group">
-        <input type="text" class="cpf-mask" placeholder="CPF">
+        <input type="text" id="cadCpf" class="cpf-mask" placeholder="CPF" maxlength="14">
         <span class="icon"><i class="bi bi-person"></i></span>
       </div>
 
