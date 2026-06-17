@@ -24,11 +24,19 @@
         <ul class="navbar-nav me-auto">
 
           <li class="nav-item">
-            <a class="nav-link active" href="Cadastro_Escola.html">Inscreva sua instituição aqui</a>
+            <a class="nav-link active" href="notas_aluno.html">Notas aluno</a>
           </li>
 
-          <li>
-            <a class="nav-link active" href="#">Notas aluno</a>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Notas professor</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="cadastro_escola.html">Inscreva sua instituição de ensino aqui</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
           </li>
 
           </li>
@@ -38,7 +46,131 @@
     </div>
   </nav>
   <br>
-  
+  <!-- CONTAINER PRINCIPAL -->
+    <div class="container">
+
+        <!-- CARD ALUNOS -->
+        <div class="card">
+
+            <div class="title">
+                <h1>Alunos:</h1>
+                <i class="bi bi-person icon-title"></i>
+            </div>
+
+            <div class="input-group">
+
+                <select>
+                  <option>Marteria</option>
+                  <option>Língua Portuguesa</option>
+                  <option>História</option>
+                  <option>Geografia</option>
+                  <option>Ciência</option>
+                  <option>Matemática</option>
+                  <option>Educação Física</option>
+                  <option>Arte</option>
+                </select>
+
+            </div>
+
+            <div class="subject-list">
+
+                <div class="subject">André Barbosa</div>
+
+                <div class="subject">Beatriz Almeida</div>
+
+                <div class="subject">Carlos Ferreira</div>
+
+                <div class="subject">Daniela Souza</div>
+
+                <div class="subject">Eduardo Martins</div>
+
+                <div class="subject">Fernanda Rocha</div>
+
+                <div class="subject">Gustavo Ribeiro</div>
+
+                <div class="subject">Helena Costa</div>
+
+                <div class="subject">Igor Nascimento</div>
+
+            </div>
+
+        </div>
+
+        <!-- CARD NOTAS -->
+        <div class="card">
+
+            <div class="title">
+                <h2>Notas dos alunos:</h2>
+                <i class="bi bi-journal-check icon-title"></i>
+            </div>
+
+            <div class="grades-grid">
+
+                <!-- Cabeçalhos -->
+                <div class="grade-header">Bimestre 1</div>
+                <div class="grade-header">Bimestre 2</div>
+                <div class="grade-header">Bimestre 3</div>
+                <div class="grade-header">Bimestre 4</div>
+
+                <!-- André -->
+                <div class="grade-box">9,5</div>
+                <div class="grade-box">7,0</div>
+                <div class="grade-box">8,0</div>
+                <div class="grade-box">6,8</div>
+
+                <!-- Beatriz -->
+                <div class="grade-box">9,7</div>
+                <div class="grade-box">8,5</div>
+                <div class="grade-box">7,2</div>
+                <div class="grade-box">9,0</div>
+
+                <!-- Carlos -->
+                <div class="grade-box">6,5</div>
+                <div class="grade-box">9,2</div>
+                <div class="grade-box">8,8</div>
+                <div class="grade-box">7,1</div>
+
+                <!-- Daniela -->
+                <div class="grade-box">8,7</div>
+                <div class="grade-box">5,5</div>
+                <div class="grade-box">9,0</div>
+                <div class="grade-box">8,0</div>
+
+                <!-- Eduardo -->
+                <div class="grade-box">7,5</div>
+                <div class="grade-box">9,7</div>
+                <div class="grade-box">6,0</div>
+                <div class="grade-box">8,8</div>
+
+                <!-- Fernanda -->
+                <div class="grade-box">9,0</div>
+                <div class="grade-box">8,8</div>
+                <div class="grade-box">9,5</div>
+                <div class="grade-box">10,0</div>
+
+                <!-- Gustavo -->
+                <div class="grade-box">7,8</div>
+                <div class="grade-box">6,8</div>
+                <div class="grade-box">9,2</div>
+                <div class="grade-box">8,0</div>
+
+                <!-- Helena -->
+                <div class="grade-box">8,8</div>
+                <div class="grade-box">7,2</div>
+                <div class="grade-box">9,5</div>
+                <div class="grade-box">9,7</div>
+
+                <!-- Igor -->
+                <div class="grade-box">9,5</div>
+                <div class="grade-box">9,0</div>
+                <div class="grade-box">8,8</div>
+                <div class="grade-box">9,3</div>
+
+            </div>
+
+        </div>
+
+    </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
