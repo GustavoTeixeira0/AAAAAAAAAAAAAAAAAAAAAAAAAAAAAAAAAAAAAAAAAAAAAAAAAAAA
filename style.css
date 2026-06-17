@@ -118,8 +118,15 @@ body {
 }
 
 .icon i {
-    font-size: 32px;
-    color: black;
+    font-size: 42px;
+    color: #00e5ff;
+    font-weight: bold;
+}
+
+.input-group {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
 }
 
 button {
