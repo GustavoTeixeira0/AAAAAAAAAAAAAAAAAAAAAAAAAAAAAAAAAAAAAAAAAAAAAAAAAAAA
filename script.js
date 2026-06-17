@@ -1,5 +1,5 @@
 document.querySelectorAll('.cpf-mask').forEach(input => {
-    input.addEventListener('input', function() {
+    input.addEventListener('input', function () {
         let cpf = this.value.replace(/\D/g, '');
 
         cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
@@ -284,7 +284,7 @@ function listarAlunosDaEscola() {
     }
 
     const usuarios = carregarUsuarios();
-    const alunosDaEscola = usuarios.filter(u => 
+    const alunosDaEscola = usuarios.filter(u =>
         u.tipo === 'Aluno' && u.escola.toLowerCase() === sessao.escola.toLowerCase()
     );
 
@@ -294,7 +294,7 @@ function listarAlunosDaEscola() {
 function abrirListaAlunos() {
     const modal = document.getElementById('listaAlunosModal');
     const container = document.getElementById('listaAlunosContainer');
-    
+
     if (!modal || !container) return;
 
     const alunos = listarAlunosDaEscola();

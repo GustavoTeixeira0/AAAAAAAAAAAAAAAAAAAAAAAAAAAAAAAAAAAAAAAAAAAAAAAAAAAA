@@ -24,11 +24,11 @@
         <ul class="navbar-nav me-auto">
 
           <li class="nav-item">
-            <a class="nav-link active" href="cadastro_escola.html">Inscreva sua instituição de ensino aqui</a>
+            <a class="nav-link active" href="notas.html">Notas</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link active" href="notas_aluno.html">Notas aluno</a>
+            <a class="nav-link active" href="#">Faltas</a>
           </li>
 
           <li class="nav-item">
@@ -76,7 +76,8 @@
       </div>
 
       <div id="notasAlunoConfig" class="actions hidden" style="gap:10px; flex-wrap: wrap;">
-        <input id="selectedAlunoCpf" class="cpf-mask" type="text" placeholder="CPF do aluno" maxlength="14" style="width:250px;">
+        <input id="selectedAlunoCpf" class="cpf-mask" type="text" placeholder="CPF do aluno" maxlength="14"
+          style="width:250px;">
         <button type="button" onclick="renderNotasAluno()">Carregar notas</button>
         <button type="button" onclick="salvarNotasAluno()">Salvar notas</button>
         <button type="button" onclick="abrirListaAlunos()">Listar alunos</button>
@@ -86,7 +87,8 @@
         <div class="modal-content">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3 style="color: #00e5ff; margin: 0;">Alunos da escola</h3>
-            <button type="button" onclick="fecharListaAlunos()" style="background: none; border: none; color: #00e5ff; font-size: 24px; cursor: pointer;">&times;</button>
+            <button type="button" onclick="fecharListaAlunos()"
+              style="background: none; border: none; color: #00e5ff; font-size: 24px; cursor: pointer;">&times;</button>
           </div>
           <div id="listaAlunosContainer" style="max-height: 400px; overflow-y: auto; margin-top: 20px;"></div>
         </div>
