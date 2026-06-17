@@ -131,6 +131,8 @@ function renderSessao() {
     const loginCardFields = document.getElementById('loginCardFields');
     const sessionUsuario = document.getElementById('sessionUsuario');
     const navUserInfo = document.getElementById('navUserInfo');
+    const painelAdminContent = document.getElementById('painelAdminContent');
+    const acessoNegado = document.getElementById('acessoNegado');
 
     if (sessao) {
         if (loginCardFields) loginCardFields.classList.add('hidden');
@@ -141,6 +143,17 @@ function renderSessao() {
             navUserInfo.classList.remove('hidden');
         }
         mostrarMensagem('msgLogin', 'Sessão ativa.', 'success');
+
+        if (painelAdminContent && acessoNegado) {
+            if (sessao.tipo === 'Administrador') {
+                painelAdminContent.classList.remove('hidden');
+                acessoNegado.classList.add('hidden');
+                listarUsuariosEscola();
+            } else {
+                painelAdminContent.classList.add('hidden');
+                acessoNegado.classList.remove('hidden');
+            }
+        }
     } else {
         if (loginCardFields) loginCardFields.classList.remove('hidden');
         if (sessionArea) sessionArea.classList.add('hidden');
@@ -151,6 +164,9 @@ function renderSessao() {
         }
         const msgLogin = document.getElementById('msgLogin');
         if (msgLogin) msgLogin.textContent = '';
+
+        if (painelAdminContent) painelAdminContent.classList.add('hidden');
+        if (acessoNegado) acessoNegado.classList.remove('hidden');
     }
 }
 
@@ -310,6 +326,81 @@ function selecionarAluno(cpf) {
     }
     fecharListaAlunos();
     renderNotasAluno();
+}
+
+function listarUsuariosEscola() {
+    const sessao = carregarSessao();
+    if (!sessao || sessao.tipo !== 'Administrador') {
+        mostrarMensagem('msgPainel', 'Acesso negado.', 'danger');
+        return;
+    }
+
+    const usuarios = carregarUsuarios();
+    const usuariosDaEscola = usuarios.filter(u => u.escola.toLowerCase() === sessao.escola.toLowerCase());
+
+    const container = document.getElementById('usuariosContainer');
+    if (!container) return;
+
+    if (usuariosDaEscola.length === 0) {
+        container.innerHTML = '<p style="color: #8defff; text-align: center; font-size: 20px; margin-top: 20px;">Nenhum usuário encontrado nesta escola.</p>';
+        return;
+    }
+
+    let html = '<table class="usuarios-table"><thead><tr><th>CPF</th><th>Tipo</th><th>Ações</th></tr></thead><tbody>';
+
+    usuariosDaEscola.forEach(usuario => {
+        html += `<tr>
+            <td>${usuario.cpf}</td>
+            <td>${usuario.tipo}</td>
+            <td>
+                <button onclick="mudarTipoUsuario('${usuario.cpf}')" style="margin-right: 10px;">Mudar tipo</button>
+                <button onclick="removerUsuario('${usuario.cpf}')" style="background: #ff6b6b;">Remover</button>
+            </td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function mudarTipoUsuario(cpf) {
+    const novoTipo = prompt('Novo tipo (Aluno, Professor, Administrador):');
+    if (!novoTipo || !['Aluno', 'Professor', 'Administrador'].includes(novoTipo)) {
+        alert('Tipo inválido.');
+        return;
+    }
+
+    const usuarios = carregarUsuarios();
+    const usuario = usuarios.find(u => u.cpf === cpf);
+
+    if (!usuario) {
+        alert('Usuário não encontrado.');
+        return;
+    }
+
+    usuario.tipo = novoTipo;
+    salvarUsuarios(usuarios);
+    mostrarMensagem('msgPainel', `Tipo do usuário ${cpf} alterado para ${novoTipo}.`, 'success');
+    listarUsuariosEscola();
+}
+
+function removerUsuario(cpf) {
+    if (!confirm(`Deseja remover o usuário ${cpf}?`)) {
+        return;
+    }
+
+    const usuarios = carregarUsuarios();
+    const indexUsuario = usuarios.findIndex(u => u.cpf === cpf);
+
+    if (indexUsuario === -1) {
+        alert('Usuário não encontrado.');
+        return;
+    }
+
+    usuarios.splice(indexUsuario, 1);
+    salvarUsuarios(usuarios);
+    mostrarMensagem('msgPainel', `Usuário ${cpf} removido com sucesso.`, 'success');
+    listarUsuariosEscola();
 }
 
 function sair() {

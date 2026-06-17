@@ -43,156 +43,38 @@
     </div>
   </nav>
   <br>
-  <div class="container">
+  <div id="painelAdminContent" class="container hidden">
 
     <div class="card" style="width:100%; max-width:1200px;">
 
-      <!-- TÍTULO -->
       <div class="title">
-        <h2>Registrar novo usuário:</h2>
+        <h2>Gerenciar Usuários da Escola</h2>
       </div>
 
-      <!-- FORMULÁRIO -->
-      <div class="register-grid">
-
-        <div class="input-group">
-          <input type="text" placeholder="usuário">
-          <span class="icon">
-            <i class="bi bi-person"></i>
-          </span>
-        </div>
-
-        <div class="input-group">
-          <input type="email" placeholder="e-mail">
-          <span class="icon">
-            <i class="bi bi-envelope"></i>
-          </span>
-        </div>
-
-        <div class="input-group">
-          <input type="password" placeholder="senha">
-          <span class="icon">
-            <i class="bi bi-key"></i>
-          </span>
-        </div>
-
-        <div class="input-group">
-          <select>
-            <option selected disabled>tipo da conta</option>
-            <option>Professor</option>
-            <option>Aluno</option>
-            <option>Administrador</option>
-          </select>
-          <span class="icon">
-            <i class="bi bi-chevron-down"></i>
-          </span>
-        </div>
-
+      <div class="actions">
+        <button type="button" onclick="listarUsuariosEscola()">Atualizar lista</button>
       </div>
 
-      <!-- SOLICITAÇÕES -->
-      <h2 class="request-title">Solicitações de Inscrição:</h2>
+      <div id="msgPainel" class="msg"></div>
 
-      <!-- Solicitação 1 -->
-      <div class="request-item">
-
-        <div>
-
-          <div class="input-group">
-            <input type="text" value="Marcos Oliveira" readonly>
-            <span class="icon">
-              <i class="bi bi-person"></i>
-            </span>
-          </div>
-
-          <div class="input-group">
-            <input type="text" value="M@rC0s!8291" readonly>
-            <span class="icon">
-              <i class="bi bi-key"></i>
-            </span>
-          </div>
-
-        </div>
-
-        <div>
-
-          <div class="input-group">
-            <input type="text" value="marcos.oliveira92@gmail.com" readonly>
-            <span class="icon">
-              <i class="bi bi-envelope"></i>
-            </span>
-          </div>
-
-          <div class="input-group">
-            <select disabled>
-              <option selected>Professor</option>
-            </select>
-
-            <span class="icon">
-              <i class="bi bi-chevron-down"></i>
-            </span>
-
-          </div>
-
-        </div>
-
-        <div class="buttons-column">
-          <button>Permitir</button>
-          <button>Negar</button>
-        </div>
-
-      </div>
-
-      <!-- Solicitação vazia -->
-      <div class="request-item" style="opacity: 0.35;">
-
-        <div>
-
-          <div class="input-group">
-            <input type="text" placeholder="usuário" readonly>
-            <span class="icon">
-              <i class="bi bi-person"></i>
-            </span>
-          </div>
-
-          <div class="input-group">
-            <input type="text" placeholder="senha" readonly>
-            <span class="icon">
-              <i class="bi bi-key"></i>
-            </span>
-          </div>
-
-        </div>
-
-        <div>
-
-          <div class="input-group">
-            <input type="text" placeholder="e-mail" readonly>
-            <span class="icon">
-              <i class="bi bi-envelope"></i>
-            </span>
-          </div>
-
-          <div class="input-group">
-            <select disabled>
-              <option selected>tipo da conta</option>
-            </select>
-            <span class="icon">
-              <i class="bi bi-chevron-down"></i>
-            </span>
-          </div>
-
-        </div>
-
-        <div class="buttons-column">
-          <button>Permitir</button>
-          <button>Negar</button>
-        </div>
-
-      </div>
+      <div id="usuariosContainer"></div>
 
     </div>
 
+  </div>
+
+  <div id="acessoNegado" class="container">
+    <div class="card" style="width:100%; max-width:600px; text-align: center;">
+      <div class="title">
+        <h2 style="color: #ff6b6b;">Acesso Negado</h2>
+      </div>
+      <p style="font-size: 20px; color: #8defff; margin: 20px 0;">
+        Esta página é restrita para Administradores.
+      </p>
+      <div class="actions">
+        <button type="button" onclick="window.location.href='index.html'">Voltar ao login</button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

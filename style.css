@@ -297,6 +297,34 @@ button:hover {
     transform: translateX(5px);
 }
 
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.usuarios-table th,
+.usuarios-table td {
+    border: 1px solid rgba(0, 255, 255, 0.18);
+    padding: 14px;
+    color: #00e5ff;
+    font-size: 18px;
+}
+
+.usuarios-table th {
+    background: rgba(0, 54, 72, 0.95);
+    text-align: left;
+}
+
+.usuarios-table td {
+    background: rgba(0, 24, 40, 0.95);
+}
+
+.usuarios-table button {
+    padding: 8px 15px;
+    font-size: 16px;
+}
+
 .register-grid,
 .request-grid {
     display: grid;
