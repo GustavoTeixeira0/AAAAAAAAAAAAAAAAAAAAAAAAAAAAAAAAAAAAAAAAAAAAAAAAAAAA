@@ -76,10 +76,7 @@
       </div>
 
       <div id="faltasConfig" class="actions hidden" style="gap:10px; flex-wrap: wrap;">
-        <input id="selectedAlunoCpf" class="cpf-mask" type="text" placeholder="CPF do aluno" maxlength="14"
-          style="width:250px;">
-        <button type="button" onclick="renderFaltasAluno()">Carregar faltas</button>
-        <button type="button" onclick="abrirListaAlunos()">Listar alunos</button>
+        <button type="button" onclick="renderFaltasAluno()">Atualizar lista de alunos</button>
       </div>
 
       <div id="faltasForm" class="actions hidden" style="gap:10px; flex-wrap: wrap; margin-top: 20px;">
@@ -92,10 +89,12 @@
         </select>
         <label class="checkbox-wrapper">
           <input id="faltaPresenca" type="checkbox" />
-          Presença
+          Presença geral
         </label>
-        <button type="button" onclick="salvarFaltaRegistro()">Adicionar registro</button>
+        <button type="button" onclick="salvarFaltasEmLote()">Registrar chamada</button>
       </div>
+
+      <div id="faltasBulkContainer" class="bulk-attendance hidden" style="margin-top: 20px;"></div>
 
       <div id="listaAlunosModal" class="modal hidden">
         <div class="modal-content">

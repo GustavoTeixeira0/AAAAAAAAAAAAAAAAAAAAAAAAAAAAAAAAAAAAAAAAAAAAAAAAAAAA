@@ -308,22 +308,21 @@ function getSituacaoFalta(count) {
     return { emoji: '🔴', label: 'Reprovação por falta', class: 'status-red' };
 }
 
-function salvarFaltaRegistro() {
+function salvarFaltasEmLote() {
     const sessao = carregarSessao();
     if (!sessao || sessao.tipo !== 'Professor') {
         mostrarMensagem('msgFaltas', 'Apenas professores podem registrar faltas.', 'danger');
         return;
     }
 
-    const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
-    const cpf = limparCpf(rawCpf);
+    const alunosSelecionados = Array.from(document.querySelectorAll('.bulk-aluno-checkbox:checked')).map(input => input.value);
     const data = document.getElementById('faltaData')?.value || '';
     const bimestre = Number(document.getElementById('faltaBimestre')?.value || 1);
     const presenca = document.getElementById('faltaPresenca')?.checked || false;
     const status = presenca ? 'Presença' : 'Falta';
 
-    if (!validarCPF(rawCpf)) {
-        mostrarMensagem('msgFaltas', 'Informe um CPF válido do aluno.', 'danger');
+    if (alunosSelecionados.length === 0) {
+        mostrarMensagem('msgFaltas', 'Selecione pelo menos um aluno.', 'danger');
         return;
     }
     if (!data) {
@@ -331,16 +330,57 @@ function salvarFaltaRegistro() {
         return;
     }
 
-    const faltasAluno = getFaltasAluno(cpf);
-    faltasAluno[bimestre] = faltasAluno[bimestre] || [];
-    faltasAluno[bimestre].push({ data, status });
-
     const faltas = carregarFaltas();
-    faltas[cpf] = faltasAluno;
+    alunosSelecionados.forEach(cpf => {
+        const faltasAluno = getFaltasAluno(cpf);
+        faltasAluno[bimestre] = faltasAluno[bimestre] || [];
+        faltasAluno[bimestre].push({ data, status });
+        faltas[cpf] = faltasAluno;
+    });
+
     salvarFaltas(faltas);
 
     mostrarMensagem('msgFaltas', 'Registro salvo com sucesso.', 'success');
     renderFaltasAluno();
+}
+
+function salvarFaltaRegistro() {
+    salvarFaltasEmLote();
+}
+
+function renderListaAlunosParaChamada() {
+    const sessao = carregarSessao();
+    const container = document.getElementById('faltasBulkContainer');
+    if (!sessao || sessao.tipo !== 'Professor' || !container) {
+        return;
+    }
+
+    const alunos = listarAlunosDaEscola();
+    if (alunos.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '<p style="color:#8defff;">Nenhum aluno encontrado para chamada.</p>';
+        return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <strong style="color:#00e5ff;">Lista de alunos para chamada</strong>
+            <button type="button" onclick="marcarTodosAlunos()" class="attendance-action">Selecionar todos</button>
+        </div>
+        <div class="bulk-attendance-list">
+            ${alunos.map(aluno => `
+                <label class="checkbox-wrapper" style="width:100%; justify-content: space-between;">
+                    <span>${aluno.cpf}</span>
+                    <input type="checkbox" class="bulk-aluno-checkbox" value="${aluno.cpf}" />
+                </label>
+            `).join('')}
+        </div>
+    `;
+}
+
+function marcarTodosAlunos() {
+    document.querySelectorAll('.bulk-aluno-checkbox').forEach(input => input.checked = true);
 }
 
 function editarFaltaRegistro(cpf, bimestre, index) {
@@ -411,6 +451,10 @@ function renderFaltasAluno() {
     const isProfessor = sessao.tipo === 'Professor';
     if (cfg) cfg.classList.toggle('hidden', !isProfessor);
     if (form) form.classList.toggle('hidden', !isProfessor);
+
+    if (isProfessor) {
+        renderListaAlunosParaChamada();
+    }
 
     let alunoCpf = limparCpf(sessao.cpf);
     let alunoMensagem = '';
