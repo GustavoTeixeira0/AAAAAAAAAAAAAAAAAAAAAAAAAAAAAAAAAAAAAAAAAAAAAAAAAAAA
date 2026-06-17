@@ -277,6 +277,194 @@ function renderNotasAluno() {
     container.innerHTML = html;
 }
 
+function carregarFaltas() {
+    const raw = localStorage.getItem('sge-faltas');
+    return raw ? JSON.parse(raw) : {};
+}
+
+function salvarFaltas(faltas) {
+    localStorage.setItem('sge-faltas', JSON.stringify(faltas));
+}
+
+function getFaltasAluno(cpf) {
+    const faltas = carregarFaltas();
+    return {
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        ...faltas[cpf]
+    };
+}
+
+function contarFaltas(faltasAluno, bimestre) {
+    return (faltasAluno[bimestre] || []).filter(item => item.status === 'Falta').length;
+}
+
+function getSituacaoFalta(count) {
+    if (count === 0) return { emoji: '🔵', label: 'Nenhuma falta', class: 'status-blue' };
+    if (count === 1) return { emoji: '🟢', label: 'Pelo menos 1 falta', class: 'status-green' };
+    if (count <= 4) return { emoji: '🟡', label: 'Muitas faltas', class: 'status-yellow' };
+    return { emoji: '🔴', label: 'Reprovação por falta', class: 'status-red' };
+}
+
+function salvarFaltaRegistro() {
+    const sessao = carregarSessao();
+    if (!sessao || sessao.tipo !== 'Professor') {
+        mostrarMensagem('msgFaltas', 'Apenas professores podem registrar faltas.', 'danger');
+        return;
+    }
+
+    const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
+    const cpf = limparCpf(rawCpf);
+    const data = document.getElementById('faltaData')?.value || '';
+    const bimestre = Number(document.getElementById('faltaBimestre')?.value || 1);
+    const presenca = document.getElementById('faltaPresenca')?.checked || false;
+    const status = presenca ? 'Presença' : 'Falta';
+
+    if (!validarCPF(rawCpf)) {
+        mostrarMensagem('msgFaltas', 'Informe um CPF válido do aluno.', 'danger');
+        return;
+    }
+    if (!data) {
+        mostrarMensagem('msgFaltas', 'Informe a data da presença/falta.', 'danger');
+        return;
+    }
+
+    const faltasAluno = getFaltasAluno(cpf);
+    faltasAluno[bimestre] = faltasAluno[bimestre] || [];
+    faltasAluno[bimestre].push({ data, status });
+
+    const faltas = carregarFaltas();
+    faltas[cpf] = faltasAluno;
+    salvarFaltas(faltas);
+
+    mostrarMensagem('msgFaltas', 'Registro salvo com sucesso.', 'success');
+    renderFaltasAluno();
+}
+
+function editarFaltaRegistro(cpf, bimestre, index) {
+    const sessao = carregarSessao();
+    if (!sessao || sessao.tipo !== 'Professor') {
+        mostrarMensagem('msgFaltas', 'Apenas professores podem editar faltas.', 'danger');
+        return;
+    }
+
+    const faltas = carregarFaltas();
+    const registros = faltas[cpf]?.[bimestre] || [];
+    const registro = registros[index];
+    if (!registro) {
+        mostrarMensagem('msgFaltas', 'Registro não encontrado.', 'danger');
+        return;
+    }
+
+    const novaData = prompt('Nova data:', registro.data);
+    if (!novaData) {
+        return;
+    }
+
+    const novoStatus = confirm('Marcar como presença? Clique em OK para Presença, Cancelar para Falta.') ? 'Presença' : 'Falta';
+    registros[index] = { data: novaData, status: novoStatus };
+    salvarFaltas(faltas);
+    mostrarMensagem('msgFaltas', 'Registro atualizado com sucesso.', 'success');
+    renderFaltasAluno();
+}
+
+function removerFaltaRegistro(cpf, bimestre, index) {
+    const sessao = carregarSessao();
+    if (!sessao || sessao.tipo !== 'Professor') {
+        mostrarMensagem('msgFaltas', 'Apenas professores podem remover faltas.', 'danger');
+        return;
+    }
+
+    if (!confirm('Deseja remover este registro?')) {
+        return;
+    }
+
+    const faltas = carregarFaltas();
+    const registros = faltas[cpf]?.[bimestre] || [];
+    registros.splice(index, 1);
+    faltas[cpf][bimestre] = registros;
+    salvarFaltas(faltas);
+    mostrarMensagem('msgFaltas', 'Registro removido.', 'success');
+    renderFaltasAluno();
+}
+
+function renderFaltasAluno() {
+    const container = document.getElementById('faltasContainer');
+    const msgFaltas = document.getElementById('msgFaltas');
+    const cfg = document.getElementById('faltasConfig');
+    const form = document.getElementById('faltasForm');
+    const sessao = carregarSessao();
+    const bimestres = [1, 2, 3, 4];
+
+    if (!container) return;
+
+    if (!sessao) {
+        container.innerHTML = '';
+        if (cfg) cfg.classList.add('hidden');
+        if (form) form.classList.add('hidden');
+        if (msgFaltas) mostrarMensagem('msgFaltas', 'Faça login para ver as faltas.', 'danger');
+        return;
+    }
+
+    const isProfessor = sessao.tipo === 'Professor';
+    if (cfg) cfg.classList.toggle('hidden', !isProfessor);
+    if (form) form.classList.toggle('hidden', !isProfessor);
+
+    let alunoCpf = limparCpf(sessao.cpf);
+    let alunoMensagem = '';
+    if (isProfessor) {
+        const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
+        if (!validarCPF(rawCpf)) {
+            alunoMensagem = '<p style="color:#8defff;">Informe o CPF do aluno e clique em carregar faltas.</p>';
+        } else {
+            alunoCpf = limparCpf(rawCpf);
+        }
+    }
+
+    if (msgFaltas) msgFaltas.textContent = '';
+    const faltasAluno = getFaltasAluno(alunoCpf);
+
+    let html = alunoMensagem;
+    html += '<div class="attendance-legend"><div class="legend-item"><span class="legend-dot status-blue"></span>🔵 nenhuma falta</div>';
+    html += '<div class="legend-item"><span class="legend-dot status-green"></span>🟢 pelo menos 1 falta</div>';
+    html += '<div class="legend-item"><span class="legend-dot status-yellow"></span>🟡 muitas faltas</div>';
+    html += '<div class="legend-item"><span class="legend-dot status-red"></span>🔴 reprovação por falta</div></div>';
+
+    html += '<div class="attendance-summary-row">';
+    bimestres.forEach(bimestre => {
+        const count = contarFaltas(faltasAluno, bimestre);
+        const situacao = getSituacaoFalta(count);
+        html += `<div class="attendance-card"><div class="status-dot ${situacao.class}"></div><div><strong>Bimestre ${bimestre}</strong><p>${count} faltas</p><p>${situacao.emoji} ${situacao.label}</p></div></div>`;
+    });
+    html += '</div>';
+
+    html += '<div class="attendance-records">';
+    bimestres.forEach(bimestre => {
+        const registros = faltasAluno[bimestre] || [];
+        html += `<div class="attendance-group"><h3>Bimestre ${bimestre}</h3>`;
+        if (registros.length === 0) {
+            html += '<p>Nenhum registro.</p>';
+        } else {
+            html += '<ul>';
+            registros.forEach((item, index) => {
+                html += `<li>${item.data} - ${item.status}`;
+                if (isProfessor && validarCPF(alunoCpf)) {
+                    html += ` <button class="attendance-action" onclick="editarFaltaRegistro('${alunoCpf}', ${bimestre}, ${index})">Editar</button>`;
+                    html += ` <button class="attendance-action remove" onclick="removerFaltaRegistro('${alunoCpf}', ${bimestre}, ${index})">Remover</button>`;
+                }
+                html += '</li>';
+            });
+            html += '</ul>';
+        }
+        html += '</div>';
+    });
+    html += '</div>';
+
+    container.innerHTML = html;
+}
+
 function listarAlunosDaEscola() {
     const sessao = carregarSessao();
     if (!sessao || sessao.tipo !== 'Professor') {
@@ -325,8 +513,20 @@ function selecionarAluno(cpf) {
         input.value = cpf;
     }
     fecharListaAlunos();
-    renderNotasAluno();
+    if (document.getElementById('gradesContainer')) {
+        renderNotasAluno();
+    }
+    if (document.getElementById('faltasContainer')) {
+        renderFaltasAluno();
+    }
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    renderSessao();
+    if (document.getElementById('faltasContainer')) {
+        renderFaltasAluno();
+    }
+});
 
 function listarUsuariosEscola() {
     const sessao = carregarSessao();

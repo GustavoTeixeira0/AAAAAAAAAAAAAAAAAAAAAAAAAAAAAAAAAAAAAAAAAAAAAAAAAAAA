@@ -67,20 +67,34 @@
 
     </div>-->
 
-    <!-- CARD NOTAS -->
+    <!-- CARD FALTAS -->
     <div class="card">
 
       <div class="title">
-        <h2>Notas dos alunos:</h2>
+        <h2>Faltas dos alunos:</h2>
         <i class="bi bi-journal-check icon-title"></i>
       </div>
 
-      <div id="notasAlunoConfig" class="actions hidden" style="gap:10px; flex-wrap: wrap;">
+      <div id="faltasConfig" class="actions hidden" style="gap:10px; flex-wrap: wrap;">
         <input id="selectedAlunoCpf" class="cpf-mask" type="text" placeholder="CPF do aluno" maxlength="14"
           style="width:250px;">
-        <button type="button" onclick="renderNotasAluno()">Carregar notas</button>
-        <button type="button" onclick="salvarNotasAluno()">Salvar notas</button>
+        <button type="button" onclick="renderFaltasAluno()">Carregar faltas</button>
         <button type="button" onclick="abrirListaAlunos()">Listar alunos</button>
+      </div>
+
+      <div id="faltasForm" class="actions hidden" style="gap:10px; flex-wrap: wrap; margin-top: 20px;">
+        <input id="faltaData" type="date" style="width:170px; padding: 12px 16px; border-radius: 12px; background: #00666b; color: #00ffff; border: none; outline: none;" />
+        <select id="faltaBimestre" style="width:140px; padding: 12px 16px; border-radius: 12px; background: #00666b; color: #00ffff; border: none; outline: none;">
+          <option value="1">Bimestre 1</option>
+          <option value="2">Bimestre 2</option>
+          <option value="3">Bimestre 3</option>
+          <option value="4">Bimestre 4</option>
+        </select>
+        <label class="checkbox-wrapper">
+          <input id="faltaPresenca" type="checkbox" />
+          Presença
+        </label>
+        <button type="button" onclick="salvarFaltaRegistro()">Adicionar registro</button>
       </div>
 
       <div id="listaAlunosModal" class="modal hidden">
@@ -94,9 +108,9 @@
         </div>
       </div>
 
-      <div id="msgNotas" class="msg"></div>
+      <div id="msgFaltas" class="msg"></div>
 
-      <div id="gradesContainer" class="grades-grid"></div>
+      <div id="faltasContainer"></div>
 
     </div>
 
@@ -107,5 +121,4 @@
     crossorigin="anonymous"></script>
   <script src="script.js"></script>
 </body>
-
 </html>

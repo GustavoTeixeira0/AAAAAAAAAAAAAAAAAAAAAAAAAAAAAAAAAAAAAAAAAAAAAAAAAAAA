@@ -325,6 +325,118 @@ button:hover {
     font-size: 16px;
 }
 
+.attendance-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #00e5ff;
+    font-size: 16px;
+}
+
+.legend-dot,
+.status-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.status-blue { background: #3a76ff; }
+.status-green { background: #2ddf7a; }
+.status-yellow { background: #f4d03f; }
+.status-red { background: #ff4f4f; }
+
+.attendance-summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.attendance-card {
+    background: rgba(0, 24, 40, 0.95);
+    border: 1px solid rgba(0, 255, 255, 0.18);
+    border-radius: 18px;
+    padding: 20px;
+    color: #00e5ff;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.attendance-card p {
+    margin: 8px 0 0;
+    font-size: 16px;
+}
+
+.attendance-records {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.attendance-group {
+    background: rgba(0, 24, 40, 0.95);
+    border: 1px solid rgba(0, 255, 255, 0.18);
+    border-radius: 18px;
+    padding: 20px;
+    color: #00e5ff;
+}
+
+.attendance-group h3 {
+    margin-bottom: 14px;
+}
+
+.attendance-group ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.attendance-group li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attendance-action {
+    background: rgba(0, 255, 255, 0.12);
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    color: #00e5ff;
+    border-radius: 10px;
+    padding: 6px 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.attendance-action.remove {
+    background: rgba(255, 79, 79, 0.14);
+    border-color: rgba(255, 79, 79, 0.3);
+}
+
+.checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #00e5ff;
+    font-size: 16px;
+}
+
+.checkbox-wrapper input {
+    width: 18px;
+    height: 18px;
+}
+
 .register-grid,
 .request-grid {
     display: grid;
