@@ -32,6 +32,10 @@
           </li>
 
           <li class="nav-item">
+            <a class="nav-link active" href="informacoes_da_escola.html">Informacoes da escola</a>
+          </li>
+
+          <li class="nav-item">
             <a class="nav-link active" href="painel_administrativo.html">Painel Administrativo</a>
           </li>
 
@@ -61,54 +65,38 @@
 
           <div class="col-md-6">
 
-
-
             <div class="input-group">
-              <input type="text" placeholder="Nome da escola">
-              <span class="icon">
-                <i class="bi bi-person"></i>
-              </span>
+              <input type="text" id="escolaNome" placeholder="Nome da escola">
+              <span class="icon"><i class="bi bi-person"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="CNPJ">
-              <span class="icon">
-                <i class="bi bi-key"></i>
-              </span>
+              <input type="text" id="escolaCnpj" placeholder="CNPJ">
+              <span class="icon"><i class="bi bi-key"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="email" placeholder="E-mail principal">
-              <span class="icon">
-                <i class="bi bi-building"></i>
-              </span>
+              <input type="email" id="escolaEmail" placeholder="E-mail principal">
+              <span class="icon"><i class="bi bi-building"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Telefone">
-              <span class="icon">
-                <i class="bi bi-person"></i>
-              </span>
+              <input type="text" id="escolaTelefone" placeholder="Telefone">
+              <span class="icon"><i class="bi bi-person"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="WhatsApp">
-              <span class="icon">
-                <i class="bi bi-key"></i>
-              </span>
+              <input type="text" id="escolaWhatsapp" placeholder="WhatsApp">
+              <span class="icon"><i class="bi bi-key"></i></span>
             </div>
 
             <div class="input-group">
-              <select>
-                <option>Tipo da instituição</option>
-                <option>Pública</option>
-                <option>Privada</option>
+              <select id="escolaTipo">
+                <option value="">Tipo da instituição</option>
+                <option value="Pública">Pública</option>
+                <option value="Privada">Privada</option>
               </select>
-
-              <span class="icon">
-                <i class="bi bi-chevron-down"></i>
-              </span>
-
+              <span class="icon"><i class="bi bi-chevron-down"></i></span>
             </div>
 
           </div>
@@ -117,45 +105,33 @@
           <div class="col-md-6">
 
             <div class="input-group">
-              <input type="text" placeholder="CEP">
-              <span class="icon">
-                <i class="bi bi-person"></i>
-              </span>
+              <input type="text" id="escolaCep" placeholder="CEP">
+              <span class="icon"><i class="bi bi-person"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Rua">
-              <span class="icon">
-                <i class="bi bi-key"></i>
-              </span>
+              <input type="text" id="escolaRua" placeholder="Rua">
+              <span class="icon"><i class="bi bi-key"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Número">
-              <span class="icon">
-                <i class="bi bi-building"></i>
-              </span>
+              <input type="text" id="escolaNumero" placeholder="Número">
+              <span class="icon"><i class="bi bi-building"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Bairro">
-              <span class="icon">
-                <i class="bi bi-person"></i>
-              </span>
+              <input type="text" id="escolaBairro" placeholder="Bairro">
+              <span class="icon"><i class="bi bi-person"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Cidade">
-              <span class="icon">
-                <i class="bi bi-key"></i>
-              </span>
+              <input type="text" id="escolaCidade" placeholder="Cidade">
+              <span class="icon"><i class="bi bi-key"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="text" placeholder="Estado">
-              <span class="icon">
-                <i class="bi bi-building"></i>
-              </span>
+              <input type="text" id="escolaEstado" placeholder="Estado">
+              <span class="icon"><i class="bi bi-building"></i></span>
             </div>
 
           </div>
@@ -173,20 +149,25 @@
               </h2>
             </div>
             <div class="input-group">
-              <input type="text" class="cpf-mask" placeholder="CPF" maxlength="14">
+              <input type="text" id="admNome" placeholder="Nome do administrador">
+              <span class="icon"><i class="bi bi-person-lines-fill"></i></span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="admCpf" class="cpf-mask" placeholder="CPF do administrador" maxlength="14">
               <span class="icon"><i class="bi bi-person"></i></span>
             </div>
 
             <div class="input-group">
-              <input type="password" id="cadSenha" placeholder="Senha">
+              <input type="password" id="admSenha" placeholder="Senha do administrador">
               <span class="icon"><i class="bi bi-key"></i></span>
             </div>
 
             <div class="actions">
-              <button onclick="cadastrar()">Inscrever a instinuição de ensino</button>
+              <button type="button" onclick="cadastrarEscolaEAdmin()">Inscrever a instituição de ensino</button>
             </div>
 
-            <div class="msg" id="msgCadastro"></div>
+            <div class="msg" id="msgCadastroEscola"></div>
           </div>
 
       </form>

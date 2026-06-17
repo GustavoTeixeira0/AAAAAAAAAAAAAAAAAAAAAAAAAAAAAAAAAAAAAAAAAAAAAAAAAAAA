@@ -12,6 +12,7 @@ document.querySelectorAll('.cpf-mask').forEach(input => {
 
 const STORAGE_KEY = 'sge-usuarios';
 const SESSION_KEY = 'sge-usuario-logado';
+const ESCOLAS_KEY = 'sge-escolas';
 
 function carregarUsuarios() {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -20,6 +21,25 @@ function carregarUsuarios() {
 
 function salvarUsuarios(usuarios) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(usuarios));
+}
+
+function carregarEscolas() {
+    const raw = localStorage.getItem(ESCOLAS_KEY);
+    return raw ? JSON.parse(raw) : [];
+}
+
+function salvarEscolas(escolas) {
+    localStorage.setItem(ESCOLAS_KEY, JSON.stringify(escolas));
+}
+
+function escolaExiste(nomeDaEscola) {
+    const escolas = carregarEscolas();
+    return escolas.some(e => e.nome.toLowerCase() === nomeDaEscola.toLowerCase());
+}
+
+function carregarEscola(nomeDaEscola) {
+    const escolas = carregarEscolas();
+    return escolas.find(e => e.nome.toLowerCase() === nomeDaEscola.toLowerCase());
 }
 
 function carregarSessao() {
@@ -132,6 +152,11 @@ function cadastrar() {
         return;
     }
 
+    if (!escolaExiste(escola)) {
+        mostrarMensagem('msgCadastro', 'Escola não cadastrada no sistema. Verifique o nome ou faça o cadastro da escola primeiro.', 'danger');
+        return;
+    }
+
     const usuarios = carregarUsuarios();
     const jaExiste = usuarios.some(u => limparCpf(u.cpf) === cpf && u.escola.toLowerCase() === escola.toLowerCase());
 
@@ -146,6 +171,97 @@ function cadastrar() {
     document.getElementById('cadSenha').value = '';
     document.getElementById('cadTipo').value = '';
     document.getElementById('cadNome').value = '';
+}
+
+function cadastrarEscolaEAdmin() {
+    const escolaNome = document.getElementById('escolaNome')?.value.trim() || '';
+    const escolaCnpj = document.getElementById('escolaCnpj')?.value.trim() || '';
+    const escolaEmail = document.getElementById('escolaEmail')?.value.trim() || '';
+    const escolaTelefone = document.getElementById('escolaTelefone')?.value.trim() || '';
+    const escolaWhatsapp = document.getElementById('escolaWhatsapp')?.value.trim() || '';
+    const escolaTipo = document.getElementById('escolaTipo')?.value.trim() || '';
+    const escolaCep = document.getElementById('escolaCep')?.value.trim() || '';
+    const escolaRua = document.getElementById('escolaRua')?.value.trim() || '';
+    const escolaNumero = document.getElementById('escolaNumero')?.value.trim() || '';
+    const escolaBairro = document.getElementById('escolaBairro')?.value.trim() || '';
+    const escolaCidade = document.getElementById('escolaCidade')?.value.trim() || '';
+    const escolaEstado = document.getElementById('escolaEstado')?.value.trim() || '';
+    const admNome = document.getElementById('admNome')?.value.trim() || '';
+    const admRawCpf = document.getElementById('admCpf')?.value.trim() || '';
+    const admCpf = limparCpf(admRawCpf);
+    const admSenha = document.getElementById('admSenha')?.value.trim() || '';
+
+    if (!escolaNome || !escolaCnpj || !escolaEmail || !admNome) {
+        mostrarMensagem('msgCadastroEscola', 'Preencha pelo menos: Nome do administrador, Nome da escola, CNPJ e E-mail da escola.', 'danger');
+        return;
+    }
+
+    if (!validarCPF(admRawCpf)) {
+        mostrarMensagem('msgCadastroEscola', 'CPF do administrador inválido.', 'danger');
+        return;
+    }
+
+    if (!admSenha) {
+        mostrarMensagem('msgCadastroEscola', 'Informe a senha do administrador.', 'danger');
+        return;
+    }
+
+    const escolas = carregarEscolas();
+    if (escolas.some(e => e.nome.toLowerCase() === escolaNome.toLowerCase())) {
+        mostrarMensagem('msgCadastroEscola', 'Escola já cadastrada com este nome.', 'danger');
+        return;
+    }
+
+    const usuarios = carregarUsuarios();
+    if (usuarios.some(u => limparCpf(u.cpf) === admCpf && u.escola.toLowerCase() === escolaNome.toLowerCase())) {
+        mostrarMensagem('msgCadastroEscola', 'Já existe um administrador registrado para esta escola.', 'danger');
+        return;
+    }
+
+    escolas.push({
+        nome: escolaNome,
+        cnpj: escolaCnpj,
+        email: escolaEmail,
+        telefone: escolaTelefone,
+        whatsapp: escolaWhatsapp,
+        tipo: escolaTipo,
+        endereco: {
+            cep: escolaCep,
+            rua: escolaRua,
+            numero: escolaNumero,
+            bairro: escolaBairro,
+            cidade: escolaCidade,
+            estado: escolaEstado
+        }
+    });
+    salvarEscolas(escolas);
+
+    usuarios.push({
+        cpf: admRawCpf,
+        senha: admSenha,
+        escola: escolaNome,
+        tipo: 'Administrador',
+        nome: admNome
+    });
+    salvarUsuarios(usuarios);
+
+    mostrarMensagem('msgCadastroEscola', 'Escola e administrador cadastrados com sucesso! Faça login com o CPF do administrador.', 'success');
+
+    document.getElementById('escolaNome').value = '';
+    document.getElementById('escolaCnpj').value = '';
+    document.getElementById('escolaEmail').value = '';
+    document.getElementById('escolaTelefone').value = '';
+    document.getElementById('escolaWhatsapp').value = '';
+    document.getElementById('escolaTipo').value = '';
+    document.getElementById('escolaCep').value = '';
+    document.getElementById('escolaRua').value = '';
+    document.getElementById('escolaNumero').value = '';
+    document.getElementById('escolaBairro').value = '';
+    document.getElementById('escolaCidade').value = '';
+    document.getElementById('escolaEstado').value = '';
+    document.getElementById('admNome').value = '';
+    document.getElementById('admCpf').value = '';
+    document.getElementById('admSenha').value = '';
 }
 
 function renderSessao() {
