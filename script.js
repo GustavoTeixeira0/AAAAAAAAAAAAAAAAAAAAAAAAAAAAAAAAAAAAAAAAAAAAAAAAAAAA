@@ -54,9 +54,30 @@ function limparCpf(cpf) {
     return cpf.replace(/\D/g, '');
 }
 
+function resolverCpfPorNomeOuCpf(raw) {
+    const usuarios = carregarUsuarios();
+    if (!raw) return null;
+    const apenas = limparCpf(raw);
+    if (apenas.length === 11) return apenas;
+
+    const nome = raw.trim().toLowerCase();
+    if (!nome) return null;
+
+    // busca exata
+    const encontrados = usuarios.filter(u => u.nome && u.nome.toLowerCase() === nome);
+    if (encontrados.length === 1) return limparCpf(encontrados[0].cpf);
+
+    // busca por inclusão
+    const parciais = usuarios.filter(u => u.nome && u.nome.toLowerCase().includes(nome));
+    if (parciais.length === 1) return limparCpf(parciais[0].cpf);
+
+    return null;
+}
+
 function fazerLogin() {
     const rawCpf = document.getElementById('loginCpf').value;
     const cpf = limparCpf(rawCpf);
+    const loginNomeInput = document.getElementById('loginNome')?.value.trim() || '';
     const senha = document.getElementById('loginSenha').value;
     const escola = document.getElementById('loginEscola').value.trim();
 
@@ -88,12 +109,13 @@ function fazerLogin() {
         return;
     }
 
-    salvarSessao({ cpf: usuario.cpf, escola: usuario.escola, tipo: usuario.tipo });
+    salvarSessao({ cpf: usuario.cpf, escola: usuario.escola, tipo: usuario.tipo, nome: usuario.nome || loginNomeInput || '' });
     mostrarMensagem('msgLogin', `Bem-vindo(a), ${usuario.tipo}! Sessão iniciada.`, 'success');
     renderSessao();
 }
 
 function cadastrar() {
+    const nome = document.getElementById('cadNome')?.value.trim() || '';
     const rawCpf = document.getElementById('cadCpf').value;
     const cpf = limparCpf(rawCpf);
     const senha = document.getElementById('cadSenha').value;
@@ -118,11 +140,12 @@ function cadastrar() {
         return;
     }
 
-    usuarios.push({ cpf, senha, escola, tipo });
+    usuarios.push({ cpf, senha, escola, tipo, nome });
     salvarUsuarios(usuarios);
     mostrarMensagem('msgCadastro', 'Cadastro concluído com sucesso! Agora faça o login.', 'success');
     document.getElementById('cadSenha').value = '';
     document.getElementById('cadTipo').value = '';
+    document.getElementById('cadNome').value = '';
 }
 
 function renderSessao() {
@@ -137,9 +160,9 @@ function renderSessao() {
     if (sessao) {
         if (loginCardFields) loginCardFields.classList.add('hidden');
         if (sessionArea) sessionArea.classList.remove('hidden');
-        if (sessionUsuario) sessionUsuario.textContent = `Logado como ${sessao.tipo} na escola ${sessao.escola} (CPF ${sessao.cpf}).`;
+        if (sessionUsuario) sessionUsuario.textContent = `Logado como ${sessao.nome || sessao.cpf} (${sessao.tipo}) na escola ${sessao.escola}.`;
         if (navUserInfo) {
-            navUserInfo.textContent = `${sessao.tipo} | CPF ${sessao.cpf}`;
+            navUserInfo.textContent = `${sessao.nome || sessao.cpf} | ${sessao.tipo}`;
             navUserInfo.classList.remove('hidden');
         }
         mostrarMensagem('msgLogin', 'Sessão ativa.', 'success');
@@ -191,11 +214,11 @@ function salvarNotasAluno() {
         return;
     }
 
-    const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
-    const cpf = limparCpf(rawCpf);
+    const rawAluno = document.getElementById('selectedAlunoCpf')?.value || '';
+    const cpf = resolverCpfPorNomeOuCpf(rawAluno);
 
-    if (!validarCPF(rawCpf)) {
-        mostrarMensagem('msgNotas', 'Informe um CPF válido do aluno.', 'danger');
+    if (!cpf) {
+        mostrarMensagem('msgNotas', 'Aluno não encontrado ou nome ambíguo. Use a lista para selecionar.', 'danger');
         return;
     }
 
@@ -242,13 +265,19 @@ function renderNotasAluno() {
 
     let alunoCpf = limparCpf(sessao.cpf);
     if (isProfessor) {
-        const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
-        if (!validarCPF(rawCpf)) {
-            if (msgNotas) mostrarMensagem('msgNotas', 'Informe um CPF válido do aluno.', 'danger');
+        const rawAluno = document.getElementById('selectedAlunoCpf')?.value || '';
+        if (!rawAluno) {
+            if (msgNotas) mostrarMensagem('msgNotas', 'Informe o nome ou CPF do aluno. Use a lista para selecionar.', 'danger');
             container.innerHTML = '';
             return;
         }
-        alunoCpf = limparCpf(rawCpf);
+        const resolved = resolverCpfPorNomeOuCpf(rawAluno);
+        if (!resolved) {
+            if (msgNotas) mostrarMensagem('msgNotas', 'Aluno não encontrado ou nome ambíguo. Use a lista para selecionar.', 'danger');
+            container.innerHTML = '';
+            return;
+        }
+        alunoCpf = resolved;
     }
 
     if (msgNotas) msgNotas.textContent = '';
@@ -371,7 +400,7 @@ function renderListaAlunosParaChamada() {
         <div class="bulk-attendance-list">
             ${alunos.map(aluno => `
                 <label class="checkbox-wrapper" style="width:100%; justify-content: space-between;">
-                    <span>${aluno.cpf}</span>
+                    <span>${aluno.nome ? aluno.nome : aluno.cpf}</span>
                     <input type="checkbox" class="bulk-aluno-checkbox" value="${aluno.cpf}" />
                 </label>
             `).join('')}
@@ -459,11 +488,12 @@ function renderFaltasAluno() {
     let alunoCpf = limparCpf(sessao.cpf);
     let alunoMensagem = '';
     if (isProfessor) {
-        const rawCpf = document.getElementById('selectedAlunoCpf')?.value || '';
-        if (!validarCPF(rawCpf)) {
-            alunoMensagem = '<p style="color:#8defff;">Informe o CPF do aluno e clique em carregar faltas.</p>';
+        const rawAluno = document.getElementById('selectedAlunoCpf')?.value || '';
+        const resolved = resolverCpfPorNomeOuCpf(rawAluno);
+        if (!resolved) {
+            alunoMensagem = '<p style="color:#8defff;">Informe o nome/CPF do aluno e clique em carregar faltas (use a lista se houver ambiguidades).</p>';
         } else {
-            alunoCpf = limparCpf(rawCpf);
+            alunoCpf = resolved;
         }
     }
 
@@ -535,8 +565,9 @@ function abrirListaAlunos() {
         container.innerHTML = '<p style="color: #8defff; text-align: center;">Nenhum aluno encontrado nesta escola.</p>';
     } else {
         container.innerHTML = alunos.map(aluno => `
-            <div class="aluno-item" onclick="selecionarAluno('${aluno.cpf}')">
-                <span style="font-weight: bold;">${aluno.cpf}</span>
+            <div class="aluno-item" onclick="selecionarAluno('${aluno.cpf}', '${(aluno.nome||'').replace(/'/g, "\\'")}')">
+                <span style="font-weight: bold;">${aluno.nome ? aluno.nome : aluno.cpf}</span>
+                <div style="color: #66f0ff; font-size: 12px;">${aluno.nome ? aluno.cpf : ''}</div>
             </div>
         `).join('');
     }
@@ -551,10 +582,10 @@ function fecharListaAlunos() {
     }
 }
 
-function selecionarAluno(cpf) {
+function selecionarAluno(cpf, nome) {
     const input = document.getElementById('selectedAlunoCpf');
     if (input) {
-        input.value = cpf;
+        input.value = nome && nome.trim() ? nome : cpf;
     }
     fecharListaAlunos();
     if (document.getElementById('gradesContainer')) {
@@ -590,10 +621,11 @@ function listarUsuariosEscola() {
         return;
     }
 
-    let html = '<table class="usuarios-table"><thead><tr><th>CPF</th><th>Tipo</th><th>Ações</th></tr></thead><tbody>';
+    let html = '<table class="usuarios-table"><thead><tr><th>Nome</th><th>CPF</th><th>Tipo</th><th>Ações</th></tr></thead><tbody>';
 
     usuariosDaEscola.forEach(usuario => {
         html += `<tr>
+            <td>${usuario.nome ? usuario.nome : ''}</td>
             <td>${usuario.cpf}</td>
             <td>${usuario.tipo}</td>
             <td>
@@ -624,16 +656,17 @@ function mudarTipoUsuario(cpf) {
 
     usuario.tipo = novoTipo;
     salvarUsuarios(usuarios);
-    mostrarMensagem('msgPainel', `Tipo do usuário ${cpf} alterado para ${novoTipo}.`, 'success');
+    mostrarMensagem('msgPainel', `Tipo do usuário ${usuario.nome || cpf} alterado para ${novoTipo}.`, 'success');
     listarUsuariosEscola();
 }
 
 function removerUsuario(cpf) {
-    if (!confirm(`Deseja remover o usuário ${cpf}?`)) {
+    const usuarios = carregarUsuarios();
+    const usuario = usuarios.find(u => u.cpf === cpf) || {};
+    if (!confirm(`Deseja remover o usuário ${usuario.nome || cpf}?`)) {
         return;
     }
 
-    const usuarios = carregarUsuarios();
     const indexUsuario = usuarios.findIndex(u => u.cpf === cpf);
 
     if (indexUsuario === -1) {
